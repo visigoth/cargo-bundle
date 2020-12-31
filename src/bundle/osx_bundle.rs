@@ -143,6 +143,9 @@ fn create_info_plist(bundle_dir: &Path, bundle_icon_file: Option<PathBuf>,
                 <string>{}</string>\n",
                copyright)?;
     }
+    for (k, v) in settings.plist_table().unwrap().iter() {
+        write!(file, "  <key>{}</key>\n  <string>{}</string>\n", k, v)?;
+    }
     write!(file, "</dict>\n</plist>\n")?;
     file.flush()?;
     Ok(())

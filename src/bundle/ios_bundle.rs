@@ -144,6 +144,9 @@ fn generate_info_plist(bundle_dir: &Path, settings: &Settings, icon_filenames: &
         write!(file, "  </array>\n")?;
     }
     write!(file, "  <key>LSRequiresIPhoneOS</key>\n  <true/>\n")?;
+    for (k, v) in settings.plist_table().unwrap().iter() {
+        write!(file, "  <key>{}</key>\n  <string>{}</string>\n", k, v)?;
+    }
     write!(file, "</dict>\n</plist>\n")?;
     file.flush()?;
     Ok(())

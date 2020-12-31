@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
 use std::path::{Path, PathBuf};
+use std::vec::Vec;
 use super::category::AppCategory;
 use target_build_utils::TargetInfo;
 use toml;
@@ -79,6 +80,8 @@ struct BundleSettings {
     deb_depends: Option<Vec<String>>,
     osx_frameworks: Option<Vec<String>>,
     osx_minimum_system_version: Option<String>,
+    // Plist map; only supports string values for now
+    plist_table: Option<HashMap<String, String>>,
     // Bundles for other binaries/examples:
     bin: Option<HashMap<String, BundleSettings>>,
     example: Option<HashMap<String, BundleSettings>>,
@@ -336,6 +339,10 @@ impl Settings {
 
     pub fn bundle_identifier(&self) -> &str {
         self.bundle_settings.identifier.as_ref().map(String::as_str).unwrap_or("")
+    }
+
+    pub fn plist_table(&self) -> Option<&HashMap<String, String>> {
+        self.bundle_settings.plist_table.as_ref()
     }
 
     /// Returns an iterator over the icon files to be used for this bundle.
