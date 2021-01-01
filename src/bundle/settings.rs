@@ -297,7 +297,17 @@ impl Settings {
             };
             match target_os {
                 "macos" => Ok(vec![PackageType::OsxBundle]),
-                "ios" => Ok(vec![PackageType::IosBundle]),
+                "ios" => {
+                    if let Some(target_triple) = self.target_triple() {
+                        if target_triple.contains("macabi") {
+                            Ok(vec![PackageType::OsxBundle])
+                        } else {
+                            Ok(vec![PackageType::IosBundle])
+                        }
+                    } else {
+                        Ok(vec![PackageType::IosBundle])
+                    }
+                },
                 "linux" => Ok(vec![PackageType::Deb]), // TODO: Do Rpm too, once it's implemented.
                 "windows" => Ok(vec![PackageType::WindowsMsi]),
                 os => bail!("Native {} bundles not yet supported.", os),
